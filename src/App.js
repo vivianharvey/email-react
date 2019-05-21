@@ -1,15 +1,52 @@
 import React, { Component } from 'react';
+import Moment from 'moment';
 import Navbar from './components/Navbar';
 import EmailList from './components/EmailList';
 import EmailContent from './components/EmailContent';
 import ComposeForm from './components/ComposeForm';
 
 class App extends Component {
+    // Lifecycle
+    componentDidMount() {
+        const url = 'https://my.api.mockaroo.com/email-project.json?key=26e98c30'
+
+        fetch(url)
+            .then(result => result.json())
+            .then(result =>{
+                console.log(result)
+                let newID = 1000;
+                let newEmails = result.map(email => {
+                    email.id = newID;
+                    newID++;
+                    email.unread = true;
+                    email.selected = false;
+                    email.emailDesc = (email.emailText).substring(0,50) + "...";
+                    email.emailTime = Moment(new Date()).format('h:mma, MMMM Do, YYYY');
+                    email.emailText = [ email.emailText ];
+                    return email;
+                })
+                this.setState({
+                    newEmails: [...newEmails]
+                })
+            })
+        let count = 0;
+        setInterval(() => {
+            if(count < 10) {
+                this.state.newEmails[count].emailTime = Moment(new Date()).format('h:mma, MMMM Do, YYYY');
+                this.setState({
+                    emails: [this.state.newEmails[count], ...this.state.emails]
+                }, () => {
+                    count++;
+                })
+            }
+        }, 60000)
+    }
     // State
     state = {
         idStart: 6,
         mainContent: 'viewEmail',
         inbox: "inbox",
+        newEmails: [],
         currentEmail: {
             "id": 1,  
             "unread": false,
@@ -18,7 +55,7 @@ class App extends Component {
             "emailName": "Joe Froo", 
             "emailSubject": "What time is it right now?",
             "emailDesc": "Hey just wondering if you know what time it is right now? If not, that's okay.",
-            "emailTime": "3:56pm, April 3, 2012",
+            "emailTime": "3:56pm, April 3, 2019",
             "emailText": [
                 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 "Officia non aliqua reprehenderit duis excepteur eu nostrud nisi aute qui esse. Sit pariatur et nisi deserunt. Adipisicing ipsum incididunt et Lorem minim magna. Ipsum magna commodo dolore ad ipsum."
@@ -35,7 +72,7 @@ class App extends Component {
                 "emailName": "Joe Froo", 
                 "emailSubject": "What time is it right now?",
                 "emailDesc": "Hey just wondering if you know what time it is right now? If not, that's okay.",
-                "emailTime": "3:56pm, April 3, 2012",
+                "emailTime": "3:56pm, April 3, 2019",
                 "emailText": [
                     "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                     "Officia non aliqua reprehenderit duis excepteur eu nostrud nisi aute qui esse. Sit pariatur et nisi deserunt. Adipisicing ipsum incididunt et Lorem minim magna. Ipsum magna commodo dolore ad ipsum."
@@ -49,7 +86,7 @@ class App extends Component {
               "emailName": "Tilo Mitra", 
               "emailSubject": "Hello from Toronto",
               "emailDesc": "Hey, I just wanted to check in with you from Toronto. I got here earlier today.",
-              "emailTime": "3:56pm, April 3, 2012",
+              "emailTime": "11:21am, April 3, 2019",
               "emailText": [
                   "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                   "Officia non aliqua reprehenderit duis excepteur eu nostrud nisi aute qui esse. Sit pariatur et nisi deserunt. Adipisicing ipsum incididunt et Lorem minim magna. Ipsum magna commodo dolore ad ipsum."
@@ -63,7 +100,7 @@ class App extends Component {
               "emailName": "Eric Ferraiuolo", 
               "emailSubject": "Re: Pull Requests",
               "emailDesc": "Hey, I had some feedback for pull request #51. We should center the menu so it looks better on mobile.",
-              "emailTime": "3:56pm, April 3, 2012",
+              "emailTime": "1:06pm, April 2, 2019",
               "emailText": [
                   "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
               ]
@@ -76,7 +113,7 @@ class App extends Component {
               "emailName": "Yui Library", 
               "emailSubject": "You have 5 bugs assigned to you",
               "emailDesc": "Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla.",
-              "emailTime": "3:56pm, April 3, 2012",
+              "emailTime": "7:55am, April 2, 2019",
               "emailText": [
                   "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
               ]
@@ -89,7 +126,7 @@ class App extends Component {
               "emailName": "Reid Burke", 
               "emailSubject": "Re: Design Language",
               "emailDesc": "Excepteur sint occaecat cupidatat non proident, sunt in culpa.",
-              "emailTime": "3:56pm, April 3, 2012",
+              "emailTime": "4:57pm, April 1, 2019",
               "emailText": [
                   "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
               ]
