@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import Navbar from './components/Navbar';
 import EmailList from './components/EmailList';
 import EmailContent from './components/EmailContent';
+import ComposeForm from './components/ComposeForm';
 
 class App extends Component {
     // State
     state = {
+        idStart: 6,
+        mainContent: 'viewEmail',
         inbox: "inbox",
         currentEmail: {
             "id": 1,  
@@ -21,6 +24,8 @@ class App extends Component {
                 "Officia non aliqua reprehenderit duis excepteur eu nostrud nisi aute qui esse. Sit pariatur et nisi deserunt. Adipisicing ipsum incididunt et Lorem minim magna. Ipsum magna commodo dolore ad ipsum."
             ] 
         },
+        trash: [],
+        sent: [],
         emails: [
             {
                 "id": 1,  
@@ -92,13 +97,21 @@ class App extends Component {
         ]
     }
     // Methods
+    switchInbox = box => {
+        this.setState({
+            inbox: box
+        });
+    }
+    switchMainContent = content => {
+        this.setState({
+            mainContent: content
+        });
+    }
     select = id => {
-        const { inbox, emails } = this.state
+        const { inbox, emails, trash, sent } = this.state
         if(inbox === 'inbox') {
             // remove class from all emails
-            this.setState({
-                email: emails.map(email => email.selected = false)
-            })
+            emails.map(email => email.selected = false)
             // get index of selected email
             const index = this.state.emails.findIndex(email => email.id === id);
             // add classes
@@ -108,7 +121,56 @@ class App extends Component {
             this.setState({
                 currentEmail: emails[index]
             })
+        } else if(inbox === 'trash') {
+            // remove class from all emails
+            trash.map(email => email.selected = false)
+            // get index of selected email
+            const index = this.state.trash.findIndex(email => email.id === id);
+            // add classes
+            this.state.trash[index].selected = true;
+            this.state.trash[index].unread = false;
+            // show email in viewer tab
+            this.setState({
+                currentEmail: trash[index]
+            })
+            console.log(this.state.currentEmail)
+        } else if(inbox === 'sent') {
+            // remove class from all emails
+            sent.map(email => email.selected = false);
+            // get index of selected email
+            const index = this.state.sent.findIndex(email => email.id === id);
+            // add classes
+            this.state.sent[index].selected = true;
+            this.state.sent[index].unread = false;
+            // show email in viewer tab
+            this.setState({
+                currentEmail: sent[index]
+            })
         }
+    }
+    delete = id => {
+        const { emails } = this.state
+        // get index of deleted email
+        const index = emails.findIndex(email => email.id === id);
+        // remove its selected class
+        this.state.emails[index].selected = false;
+        // add it to the trash array
+        this.state.trash.push(this.state.emails[index]);
+        this.setState({
+            // remove it from the emails array
+            emails: emails.filter((email, i) => {
+                return id !== email.id
+            }),
+        }, () => {
+            // Then select the first email of the inbox
+            if(this.state.emails.length > 0) {
+                this.setState({
+                    currentEmail: this.state.emails[0]
+                })
+                this.state.emails[0].selected = true;
+                this.state.emails[0].unread = false;
+            }
+        })
     }
     unreadCount() {
         let count = 0;
@@ -117,17 +179,41 @@ class App extends Component {
         });
         return count;
     }
+    handleSubmit = email => {
+        this.setState({ 
+            idStart: (this.state.idStart + 1),
+            sent: [...this.state.sent, email],
+            mainContent: 'viewEmail' 
+        })
+    }
     // Template
     render() {
         let unreadCount = this.unreadCount();
+        // Conditional Rendering of Email List depending on "box"
+        let emailList;
+        if(this.state.inbox === 'inbox') {
+            emailList = <EmailList emails={this.state.emails} select={this.select} />
+        } else if(this.state.inbox === 'trash') {
+            emailList = <EmailList emails={this.state.trash} select={this.select} />
+        } else if(this.state.inbox === 'sent') {
+            emailList = <EmailList emails={this.state.sent} select={this.select} />
+        }
+        // Conditional Rendering of Main Content area
+        let mainContent;
+        if(this.state.mainContent === 'viewEmail') {
+            mainContent = <EmailContent currentEmail={this.state.currentEmail} delete={this.delete} trash={this.state.trash} sent={this.state.sent} emails={this.state.emails} />
+        } else {
+            mainContent = <ComposeForm idStart={this.state.idStart} handleSubmit={this.handleSubmit} switchMainContent={this.switchMainContent} />
+        }
+
         return (
             <div id="layout" className="content pure-g">
-                <Navbar unreadCount={unreadCount} />
+                <Navbar unreadCount={unreadCount} switchInbox={this.switchInbox} switchMainContent={this.switchMainContent} />
         
-            <EmailList emails={this.state.emails} select={this.select} />
+            {emailList}
         
             <div id="main" className="pure-u-1">
-                <EmailContent currentEmail={this.state.currentEmail} />
+                {mainContent}
             </div>
         </div>
         )

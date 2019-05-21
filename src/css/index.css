@@ -273,3 +273,35 @@ a {
   }
 }
 
+/* ----- CUSTOM -----  */
+.email-item:hover {
+    cursor: pointer;
+}
+
+#compose-form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+#compose-form form {
+    width: 100%;
+    padding: 1.5rem;
+}
+#compose-form h2 {
+    margin-top: 0;
+}
+#compose-form button {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+#compose-form input[type="text"] {
+    margin-bottom: 15px !important;
+}
+#empty-text {
+    padding: 1em 2em;
+    font-style: italic;
+    color: #999;
+    font-size: 1.5rem;
+}
+

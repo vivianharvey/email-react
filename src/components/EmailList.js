@@ -26,11 +26,19 @@ class EmailList extends Component {
             )
         });
         // Render list
-        return (
-            <div id="list" className="pure-u-1">
-                {list}
-            </div>
-        )
+        if( emails.length < 1) {
+            return ( 
+                <div id="list" className="pure-u-1">
+                    <p id="empty-text">Hmmm, there's nothing here!</p>
+                </div>
+            )
+        } else {
+            return (
+                <div id="list" className="pure-u-1">
+                    {list}
+                </div>
+            )
+        }
     }
 }
 
