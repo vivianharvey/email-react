@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/email-react/static/css/main.aa8339bc.chunk.css",
+    "main.js": "/email-react/static/js/main.105d87f5.chunk.js",
+    "main.js.map": "/email-react/static/js/main.105d87f5.chunk.js.map",
+    "runtime~main.js": "/email-react/static/js/runtime~main.28143474.js",
+    "runtime~main.js.map": "/email-react/static/js/runtime~main.28143474.js.map",
+    "static/js/2.7d29f1d3.chunk.js": "/email-react/static/js/2.7d29f1d3.chunk.js",
+    "static/js/2.7d29f1d3.chunk.js.map": "/email-react/static/js/2.7d29f1d3.chunk.js.map",
+    "index.html": "/email-react/index.html",
+    "precache-manifest.f369613b78647fa00ab6c271b8de14bf.js": "/email-react/precache-manifest.f369613b78647fa00ab6c271b8de14bf.js",
+    "service-worker.js": "/email-react/service-worker.js",
+    "static/css/main.aa8339bc.chunk.css.map": "/email-react/static/css/main.aa8339bc.chunk.css.map"
+  }
+}
